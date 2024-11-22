@@ -6,7 +6,6 @@
 
     <div class="row justify-content-center">
       <form @submit.prevent="addRoom" class="col-lg-4">
-        <!-- Các trường nhập liệu cho thông tin phòng -->
         <div class="mb-3">
           <label for="roomId" class="form-label">Số phòng</label>
           <input

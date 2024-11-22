@@ -1,6 +1,5 @@
 const db = require("../config/db");
 
-// Lấy danh sách tất cả người thuê phòng
 exports.getTenants = (req, res) => {
   db.query("SELECT * FROM tenants WHERE is_delete = 0", (err, results) => {
     if (err) {
@@ -12,7 +11,6 @@ exports.getTenants = (req, res) => {
   });
 };
 
-// Lấy danh sách tất cả người thuê phòng đã xóa
 exports.getTenantsDeleted = (req, res) => {
   db.query("SELECT * FROM tenants WHERE is_delete = 1", (err, results) => {
     if (err) {
@@ -24,7 +22,6 @@ exports.getTenantsDeleted = (req, res) => {
   });
 };
 
-// Khôi phục thành viên
 exports.restoreTenant = (req, res) => {
   const tenantId = req.params.tenant_id;
 
@@ -42,12 +39,10 @@ exports.restoreTenant = (req, res) => {
   });
 };
 
-// Thêm người thuê mới
 exports.createTenant = (req, res) => {
   const { tenant_id, full_name, phone_number, date_of_birth, gender } =
     req.body;
 
-  // Kiểm tra nếu thiếu thông tin bắt buộc
   if (
     !tenant_id ||
     !full_name ||
@@ -76,12 +71,10 @@ exports.createTenant = (req, res) => {
   );
 };
 
-// Chỉnh sửa thông tin thành viên
 exports.updateTenant = (req, res) => {
   const { tenant_id } = req.params;
   const { full_name, phone_number, date_of_birth, gender } = req.body;
 
-  // Kiểm tra nếu thiếu thông tin bắt buộc
   if (
     !full_name ||
     !phone_number ||
@@ -115,7 +108,6 @@ exports.updateTenant = (req, res) => {
   );
 };
 
-// Xóa người thuê (chỉ thay đổi trạng thái is_delete)
 exports.deleteTenant = (req, res) => {
   const { tenant_id } = req.params;
 
@@ -131,11 +123,9 @@ exports.deleteTenant = (req, res) => {
   );
 };
 
-// Xem chi tiết người thuê
 exports.getTenantDetail = (req, res) => {
   const tenantId = req.params.tenant_id;
 
-  // Truy vấn để lấy thông tin thành viên và thông tin hợp đồng, phòng mà họ đang thuê
   const query = `
     SELECT 
       tenants.tenant_id,
@@ -170,6 +160,6 @@ exports.getTenantDetail = (req, res) => {
     if (results.length === 0) {
       return res.status(404).json({ error: "Thành viên không tồn tại" });
     }
-    res.json(results[0]); // Trả về chi tiết thành viên
+    res.json(results[0]);
   });
 };

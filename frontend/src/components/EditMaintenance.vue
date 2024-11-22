@@ -6,7 +6,6 @@
       </h2>
     </div>
 
-    <!-- Form chỉnh sửa -->
     <div class="row justify-content-center">
       <form @submit.prevent="updateMaintenance" class="col-lg-5">
         <div class="mb-3">
@@ -46,7 +45,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      maintenanceId: this.$route.params.maintenance_id, // Lấy maintenanceId từ URL
+      maintenanceId: this.$route.params.maintenance_id,
       maintenance: {
         description: "",
         expense: null,
@@ -55,11 +54,10 @@ export default {
   },
   async created() {
     try {
-      // Lấy thông tin chi tiết bảo trì khi trang được tạo
       const response = await axios.get(
         `http://localhost:3000/api/maintenance/${this.maintenanceId}`
       );
-      this.maintenance = response.data; // Gán dữ liệu nhận được vào đối tượng maintenance
+      this.maintenance = response.data;
     } catch (error) {
       console.error("Lỗi khi lấy thông tin lịch sử bảo trì:", error);
     }
@@ -67,13 +65,12 @@ export default {
   methods: {
     async updateMaintenance() {
       try {
-        // Gửi yêu cầu PUT để cập nhật thông tin
         await axios.put(
           `http://localhost:3000/api/maintenance/${this.maintenanceId}`,
           this.maintenance
         );
         alert("Cập nhật thành công!");
-        this.$router.push("/maintenance"); // Chuyển về trang danh sách lịch sử bảo trì
+        this.$router.push("/maintenance");
       } catch (error) {
         console.error("Lỗi khi cập nhật lịch sử bảo trì:", error);
         alert("Có lỗi xảy ra khi cập nhật!");

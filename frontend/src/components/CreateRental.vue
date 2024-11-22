@@ -92,13 +92,13 @@ export default {
     return {
       newRental: {
         room_id: null,
-        tenant_id: null, // Chỉ lưu 1 tenant
+        tenant_id: null,
         start_date: "",
         end_date: "",
         deposit: 0,
-        status: "đang hiệu lực", // Mặc định là "đang hiệu lực"
+        status: "đang hiệu lực",
       },
-      availableRooms: [], // Chỉ lưu phòng có trạng thái "đang trống"
+      availableRooms: [],
       tenants: [],
     };
   },

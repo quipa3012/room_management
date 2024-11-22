@@ -46,7 +46,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      room_id: this.$route.params.room_id, // Nhận room_id từ URL
+      room_id: this.$route.params.room_id,
       description: "",
       expense: "",
     };
@@ -54,24 +54,19 @@ export default {
   methods: {
     async submitForm() {
       try {
-        // Gửi thông tin sửa chữa lên backend
         const response = await axios.post("/maintenance", {
           room_id: this.room_id,
           description: this.description,
           expense: this.expense,
         });
 
-        // Kiểm tra nếu gửi thành công
         if (response.status === 201) {
           alert("Thêm lịch sử sửa chữa thành công!");
-          // Chuyển về trang danh sách phòng sau khi thành công
           this.$router.push("/");
         } else {
-          // Nếu không thành công, hiển thị lỗi
           alert("Đã xảy ra lỗi khi thêm sửa chữa.");
         }
       } catch (error) {
-        // Bắt lỗi nếu có
         console.error(
           "Lỗi khi thêm lịch sử sửa chữa:",
           error.response ? error.response.data : error.message

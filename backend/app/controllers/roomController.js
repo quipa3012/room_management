@@ -1,6 +1,5 @@
 const db = require("../config/db");
 
-// Lấy danh sách các phòng trọ
 exports.getRooms = (req, res) => {
   const query = `
     SELECT rooms.*, maintenance.status AS maintenance_status
@@ -25,7 +24,6 @@ LEFT JOIN (
   });
 };
 
-// Thêm phòng trọ mới
 exports.createRoom = (req, res) => {
   const { room_id, capacity, price, status } = req.body;
 
@@ -41,12 +39,10 @@ exports.createRoom = (req, res) => {
   );
 };
 
-// Hàm cập nhật thông tin phòng
 exports.updateRoom = (req, res) => {
   const roomId = req.params.room_id;
   const { capacity, price } = req.body;
 
-  // Kiểm tra xem phòng có tồn tại hay không
   db.query("SELECT * FROM rooms WHERE room_id = ?", [roomId], (err, result) => {
     if (err) {
       console.error("Lỗi khi truy vấn dữ liệu:", err);
@@ -57,7 +53,6 @@ exports.updateRoom = (req, res) => {
       return res.status(404).json({ error: "Phòng không tồn tại" });
     }
 
-    // Cập nhật sức chứa và giá phòng
     db.query(
       "UPDATE rooms SET capacity = ?, price = ? WHERE room_id = ?",
       [capacity, price, roomId],
@@ -72,7 +67,6 @@ exports.updateRoom = (req, res) => {
   });
 };
 
-// Xóa phòng trọ
 exports.deleteRoom = (req, res) => {
   const { room_id } = req.params;
 
@@ -84,11 +78,9 @@ exports.deleteRoom = (req, res) => {
   });
 };
 
-// Xem chi tiết phòng
 exports.getRoomDetail = (req, res) => {
   const roomId = req.params.room_id;
 
-  // Câu lệnh SQL với JOIN
   const query = `
     SELECT rooms.*, rentals.rental_id, rentals.start_date, rentals.end_date, rentals.rental_price, 
            tenants.tenant_id, tenants.full_name, tenants.phone_number, tenants.date_of_birth, tenants.gender
@@ -108,11 +100,10 @@ exports.getRoomDetail = (req, res) => {
         .json({ error: "Phòng không tồn tại hoặc chưa có hợp đồng thuê" });
     }
 
-    res.json(results[0]); // Trả về chi tiết phòng, hợp đồng và thông tin người thuê
+    res.json(results[0]);
   });
 };
 
-// Lấy danh sách phòng "đang trống"
 exports.getRoomsHollow = (req, res) => {
   const query = `SELECT * FROM rooms WHERE status = 'đang trống'`;
   db.query(query, (err, results) => {

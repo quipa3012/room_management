@@ -91,7 +91,6 @@ export default {
       const response = await axios.get("/rooms");
       this.rooms = response.data;
 
-      // Thêm trạng thái sửa chữa vào mỗi phòng
       this.rooms = this.rooms.map((room) => {
         room.maintenance_status_text =
           room.maintenance_status === 0 ? "Đang sửa chữa" : "Không có sửa chữa";
@@ -105,30 +104,26 @@ export default {
     }
   },
   methods: {
-    // Phương thức trả về class tương ứng với trạng thái phòng
     getStatusClass(status) {
       if (status === "đang trống") {
-        return "badge bg-success"; // Trạng thái "Trống" -> green (success)
+        return "badge bg-success";
       } else if (status === "đang thuê") {
-        return "badge bg-primary"; // Trạng thái "Đang cho thuê" -> blue (primary)
+        return "badge bg-primary";
       }
-      return ""; // Nếu không có trạng thái nào phù hợp
+      return "";
     },
 
-    // Phương thức trả về class cho trạng thái sửa chữa
     getMaintenanceStatusClass(status) {
       if (status === 0) {
-        return "badge bg-danger"; // Trạng thái "Đang sửa chữa" -> red (danger)
+        return "badge bg-danger";
       }
-      return "badge bg-secondary"; // Trạng thái mặc định
+      return "badge bg-secondary";
     },
 
-    // Lọc phòng theo trạng thái
     filterRooms() {
       if (this.filterStatus === "") {
-        this.filteredRooms = [...this.rooms]; // Khi không có lọc, hiển thị tất cả phòng
+        this.filteredRooms = [...this.rooms];
       } else if (this.filterStatus === "đang sửa chữa") {
-        // Lọc những phòng có trạng thái sửa chữa là "Đang sửa chữa"
         this.filteredRooms = this.rooms.filter(
           (room) => room.maintenance_status === 0
         );
@@ -139,14 +134,12 @@ export default {
       }
     },
 
-    // Phương thức xóa phòng
     async deleteRoom(roomId) {
       if (confirm("Bạn có chắc chắn muốn xóa phòng này?")) {
         try {
           await axios.delete(`/rooms/${roomId}`);
-          // Sau khi xóa, cập nhật lại danh sách phòng
           this.rooms = this.rooms.filter((room) => room.room_id !== roomId);
-          this.filteredRooms = [...this.rooms]; // Cập nhật danh sách đã lọc
+          this.filteredRooms = [...this.rooms];
           alert("Phòng đã được xóa.");
         } catch (error) {
           console.error("Lỗi khi xóa phòng:", error);

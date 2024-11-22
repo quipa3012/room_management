@@ -33,10 +33,10 @@ const routes = [
     component: EditRoom,
   },
   {
-    path: "/:room_id", // ID của phòng sẽ được truyền vào URL
+    path: "/:room_id",
     name: "RoomDetail",
     component: RoomDetail,
-    props: true, // Truyền tham số ID vào component
+    props: true,
   },
   {
     path: "/tenants",

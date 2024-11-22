@@ -24,7 +24,6 @@
       </div>
     </div>
 
-    <!-- Hiển thị danh sách hợp đồng -->
     <div v-if="filteredRentals.length" class="row">
       <div
         class="col-md-4 mb-3"
@@ -51,7 +50,6 @@
               </span>
             </p>
 
-            <!-- Liên kết tới chi tiết hợp đồng -->
             <router-link
               :to="`/rentals/${rental.rental_id}`"
               class="btn btn-outline-dark"
@@ -63,7 +61,6 @@
       </div>
     </div>
 
-    <!-- Nếu không có dữ liệu hợp đồng -->
     <div v-else>
       <p>Chưa có hợp đồng nào.</p>
     </div>
@@ -76,32 +73,29 @@ import axios from "axios";
 export default {
   data() {
     return {
-      rentals: [], // Danh sách tất cả các hợp đồng
-      selectedStatus: "", // Trạng thái được chọn để lọc
-      filteredRentals: [], // Danh sách hợp đồng sau khi lọc
+      rentals: [],
+      selectedStatus: "",
+      filteredRentals: [],
     };
   },
   async created() {
     try {
-      // Gọi API để lấy danh sách hợp đồng
       const response = await axios.get("/rentals");
       this.rentals = response.data;
-      this.filteredRentals = this.rentals; // Gán danh sách hợp đồng ban đầu cho filteredRentals
+      this.filteredRentals = this.rentals;
     } catch (error) {
       console.error("Lỗi khi lấy danh sách hợp đồng:", error);
     }
   },
   methods: {
-    // Phương thức trả về class tương ứng với trạng thái hợp đồng
     getStatusClass(status) {
       return status === "đang hiệu lực"
         ? "badge bg-success"
         : "badge bg-danger";
     },
-    // Phương thức lọc hợp đồng theo trạng thái
     filterRentals() {
       if (this.selectedStatus === "") {
-        this.filteredRentals = this.rentals; // Nếu không có trạng thái lọc, hiển thị tất cả
+        this.filteredRentals = this.rentals;
       } else {
         this.filteredRentals = this.rentals.filter(
           (rental) => rental.status === this.selectedStatus

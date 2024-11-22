@@ -4,7 +4,6 @@
       <h2 class="col-lg-4 text-center mb-4">Chỉnh sửa thông tin thành viên</h2>
     </div>
 
-    <!-- Kiểm tra nếu thông tin thành viên đã được tải về -->
     <div class="row justify-content-center">
       <div v-if="tenant" class="col-lg-4">
         <form @submit.prevent="updateTenant">
@@ -57,7 +56,6 @@
           </div>
         </form>
       </div>
-      <!-- Nếu chưa có thông tin thành viên, hiển thị thông báo -->
       <div v-else>
         <p>Đang tải thông tin thành viên...</p>
       </div>
@@ -71,14 +69,12 @@ import axios from "axios";
 export default {
   data() {
     return {
-      tenant: null, // Thông tin thành viên
+      tenant: null,
     };
   },
   async created() {
     try {
-      // Lấy tenant_id từ URL
       const tenantId = this.$route.params.tenant_id;
-      // Gọi API để lấy thông tin thành viên
       const response = await axios.get(`/tenants/${tenantId}`);
       this.tenant = response.data;
     } catch (error) {
@@ -88,12 +84,10 @@ export default {
   methods: {
     async updateTenant() {
       try {
-        // Lấy tenant_id từ URL
         const tenantId = this.$route.params.tenant_id;
-        // Gửi yêu cầu PUT để cập nhật thông tin thành viên
         const response = await axios.put(`/tenants/${tenantId}`, this.tenant);
         alert("Thông tin thành viên đã được cập nhật!");
-        this.$router.push("/tenants"); // Chuyển về danh sách thành viên
+        this.$router.push("/tenants");
       } catch (error) {
         console.error("Lỗi khi cập nhật thông tin thành viên:", error);
         alert("Không thể cập nhật thông tin.");

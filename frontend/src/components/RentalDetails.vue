@@ -2,7 +2,6 @@
   <div class="container mt-4">
     <h2 class="mb-4">Chi Tiết Hợp Đồng Thuê Phòng #{{ rental?.rental_id }}</h2>
 
-    <!-- Hiển thị thông tin chi tiết hợp đồng -->
     <div v-if="rental">
       <div class="row justify-content-between">
         <div class="col-md-5 card">
@@ -35,7 +34,6 @@
         </div>
       </div>
 
-      <!-- Hiển thị các lần thanh toán -->
       <div class="mt-4">
         <h4>Lịch sử thanh toán</h4>
         <table class="table table-bordered">
@@ -53,7 +51,6 @@
           </tbody>
         </table>
       </div>
-      <!-- Phần thanh toán -->
       <div class="row justify-content-center">
         <div class="mt-4 col-lg-2" v-if="rental.status === 'đang hiệu lực'">
           <h4>Thêm thanh toán</h4>
@@ -77,7 +74,6 @@
         </div>
       </div>
 
-      <!-- Nút "Chấm dứt hợp đồng" chỉ hiển thị khi trạng thái hợp đồng là "đang hiệu lực" -->
       <div
         v-if="rental.status === 'đang hiệu lực'"
         class="row justify-content-center mb-5"
@@ -91,7 +87,6 @@
       </div>
     </div>
 
-    <!-- Nếu không tìm thấy hợp đồng -->
     <div v-else>
       <p>Không tìm thấy hợp đồng.</p>
     </div>
@@ -104,14 +99,13 @@ import axios from "axios";
 export default {
   data() {
     return {
-      rental: null, // Chi tiết hợp đồng
-      paymentAmount: 0, // Số tiền thanh toán nhập vào
+      rental: null,
+      paymentAmount: 0,
     };
   },
   async created() {
     const rentalId = this.$route.params.rental_id;
     try {
-      // Gọi API để lấy chi tiết hợp đồng
       const response = await axios.get(`/rentals/${rentalId}`);
       this.rental = response.data;
     } catch (error) {
@@ -119,23 +113,20 @@ export default {
     }
   },
   methods: {
-    // Phương thức hiển thị hộp thoại xác nhận trước khi chấm dứt hợp đồng
     confirmTerminateRental() {
       const isConfirmed = window.confirm(
         "Bạn có chắc chắn muốn chấm dứt hợp đồng này không?"
       );
       if (isConfirmed) {
-        this.terminateRental(); // Nếu người dùng xác nhận, gọi phương thức chấm dứt hợp đồng
+        this.terminateRental();
       }
     },
 
-    // Phương thức chấm dứt hợp đồng
     async terminateRental() {
       const rental_id = this.rental.rental_id;
       try {
-        // Gửi yêu cầu PUT để cập nhật trạng thái hợp đồng thành "không hiệu lực"
         const response = await axios.put(`/rentals/terminate/${rental_id}`);
-        this.rental.status = "không hiệu lực"; // Cập nhật trạng thái ngay lập tức trên UI
+        this.rental.status = "không hiệu lực";
         alert("Hợp đồng đã được chấm dứt.");
       } catch (error) {
         console.error("Lỗi khi chấm dứt hợp đồng:", error);
@@ -143,9 +134,7 @@ export default {
       }
     },
 
-    // Phương thức thêm thanh toán mới
     async addPayment() {
-      // Hiển thị hộp thoại xác nhận trước khi thực hiện thanh toán
       const isConfirmed = window.confirm(
         "Bạn có chắc chắn muốn thêm lần thanh toán này không?"
       );
@@ -154,13 +143,12 @@ export default {
         const rental_id = this.rental.rental_id;
         const amount = this.paymentAmount;
         try {
-          // Gửi yêu cầu POST để thêm thanh toán mới
           const response = await axios.post("/rentals/payments", {
             rental_id,
             amount,
           });
-          this.rental.payments.push(response.data); // Thêm thanh toán mới vào danh sách thanh toán
-          this.paymentAmount = 0; // Reset lại số tiền sau khi thanh toán
+          this.rental.payments.push(response.data);
+          this.paymentAmount = 0;
           alert("Thanh toán thành công!");
         } catch (error) {
           console.error("Lỗi khi thêm thanh toán:", error);

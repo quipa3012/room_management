@@ -2,7 +2,6 @@
   <div class="container mt-4" v-if="tenant">
     <h2 class="mb-4">Chi tiết thành viên</h2>
 
-    <!-- Thông tin cá nhân -->
     <div class="card mb-3">
       <div class="card-body">
         <h5 class="card-title">Thông tin cá nhân</h5>
@@ -16,7 +15,6 @@
       </div>
     </div>
 
-    <!-- Thông tin hợp đồng và phòng -->
     <div v-if="tenant.rental_id" class="card mb-3">
       <div class="card-body">
         <h5 class="card-title">Thông tin hợp đồng</h5>
@@ -30,7 +28,6 @@
       </div>
     </div>
 
-    <!-- Thông tin phòng -->
     <div v-if="tenant.room_id" class="card mb-3">
       <div class="card-body">
         <h5 class="card-title">Thông tin phòng</h5>
@@ -52,7 +49,7 @@
 import axios from "axios";
 
 export default {
-  props: ["tenant_id"], // Nhận tham số ID từ URL
+  props: ["tenant_id"],
   data() {
     return {
       tenant: null,
@@ -60,7 +57,6 @@ export default {
   },
   async created() {
     try {
-      // Gọi API để lấy chi tiết thành viên
       const response = await axios.get(`/tenants/${this.tenant_id}`);
       this.tenant = response.data;
     } catch (error) {

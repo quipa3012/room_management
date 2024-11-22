@@ -5,7 +5,6 @@
       Đang hoàn tất sửa chữa cho lịch sử sửa chữa #{{ maintenance_id }}
     </p>
 
-    <!-- Hiển thị thông tin sửa chữa nếu có -->
     <div v-if="maintenance" class="card p-3 mb-4">
       <h4 class="card-title">Thông tin sửa chữa</h4>
       <div class="mb-3">
@@ -28,7 +27,6 @@
       </div>
     </div>
 
-    <!-- Nút hoàn tất sửa chữa -->
     <button
       class="btn btn-outline-dark btn-lg"
       @click="completeMaintenance"
@@ -45,13 +43,12 @@ import axios from "axios";
 export default {
   data() {
     return {
-      maintenance_id: this.$route.params.maintenance_id, // Lấy maintenance_id từ URL
-      maintenance: null, // Lưu thông tin sửa chữa
+      maintenance_id: this.$route.params.maintenance_id,
+      maintenance: null,
     };
   },
   async created() {
     try {
-      // Gọi API để lấy chi tiết thông tin sửa chữa
       const response = await axios.get(`/maintenance/${this.maintenance_id}`);
       this.maintenance = response.data;
     } catch (error) {
@@ -59,15 +56,12 @@ export default {
     }
   },
   methods: {
-    // Phương thức hoàn tất sửa chữa
     async completeMaintenance() {
       try {
-        // Gửi PUT request để hoàn tất sửa chữa
         await axios.put(`/maintenance/complete/${this.maintenance_id}`);
 
         alert("Lịch sử sửa chữa đã được hoàn thành!");
 
-        // Chuyển hướng về trang danh sách lịch sử bảo trì
         this.$router.push("/maintenance");
       } catch (error) {
         console.error("Lỗi khi hoàn tất sửa chữa:", error);
@@ -75,21 +69,17 @@ export default {
     },
   },
   computed: {
-    // Trạng thái hiển thị cho sửa chữa
     statusText() {
-      // Kiểm tra nếu maintenance tồn tại và có status
       if (this.maintenance) {
         return this.maintenance.status === 0 ? "Chưa hoàn tất" : "Đã hoàn tất";
       }
-      return ""; // Nếu maintenance chưa có dữ liệu, trả về chuỗi rỗng
+      return "";
     },
-    // Lớp CSS thay đổi màu sắc trạng thái
     statusClass() {
-      // Kiểm tra nếu maintenance tồn tại và có status
       if (this.maintenance) {
         return this.maintenance.status === 0 ? "text-danger" : "text-success";
       }
-      return ""; // Nếu maintenance chưa có dữ liệu, trả về chuỗi rỗng
+      return "";
     },
   },
 };

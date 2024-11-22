@@ -59,13 +59,12 @@ import axios from "axios";
 export default {
   data() {
     return {
-      tenants: [], // Mảng chứa thông tin thành viên
+      tenants: [],
     };
   },
   async created() {
     try {
-      // Gọi API để lấy danh sách thành viên
-      const response = await axios.get("/tenants"); // Giả sử API trả về danh sách thành viên tại "/tenants"
+      const response = await axios.get("/tenants");
       this.tenants = response.data;
     } catch (error) {
       console.error("Lỗi khi lấy danh sách thành viên:", error);
@@ -75,9 +74,7 @@ export default {
     async deleteTenant(tenant_id) {
       if (confirm("Bạn có chắc chắn muốn xóa thành viên này?")) {
         try {
-          // Gọi API xóa thành viên
           await axios.delete(`/tenants/${tenant_id}`);
-          // Sau khi xóa thành công, xóa thành viên khỏi danh sách hiển thị
           this.tenants = this.tenants.filter(
             (tenant) => tenant.tenant_id !== tenant_id
           );

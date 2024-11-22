@@ -38,12 +38,11 @@ import axios from "axios";
 export default {
   data() {
     return {
-      deletedTenants: [], // Mảng chứa thông tin thành viên đã xóa
+      deletedTenants: [],
     };
   },
   async created() {
     try {
-      // Gọi API để lấy danh sách thành viên đã xóa
       const response = await axios.get("/tenants/deleted");
       this.deletedTenants = response.data;
     } catch (error) {
@@ -53,10 +52,8 @@ export default {
   methods: {
     async restoreTenant(tenant_id) {
       try {
-        // Gọi API để khôi phục thành viên
         await axios.put(`/tenants/restore/${tenant_id}`);
 
-        // Xóa thành viên khôi phục khỏi danh sách hiện tại
         this.deletedTenants = this.deletedTenants.filter(
           (tenant) => tenant.tenant_id !== tenant_id
         );

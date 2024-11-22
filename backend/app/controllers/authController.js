@@ -2,7 +2,6 @@ const db = require("../config/db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-// Đăng ký quản lý mới
 exports.register = async (req, res) => {
   const { username, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -19,7 +18,6 @@ exports.register = async (req, res) => {
   );
 };
 
-// Đăng nhập quản lý
 exports.login = (req, res) => {
   const { username, password } = req.body;
 

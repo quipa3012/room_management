@@ -3,7 +3,6 @@
     <h2 class="mb-4">Chi tiết phòng trọ</h2>
     <div class="card">
       <div class="card-body">
-        <!-- Thông tin phòng trọ -->
         <h5 class="card-title">Phòng số: {{ room.room_id }}</h5>
         <p class="card-text">
           Giá: {{ room.price }} VND <br />
@@ -50,7 +49,7 @@
 
 <script>
 export default {
-  props: ["room_id"], // Nhận tham số ID từ URL
+  props: ["room_id"],
   data() {
     return {
       room: null,

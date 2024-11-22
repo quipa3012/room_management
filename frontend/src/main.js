@@ -10,7 +10,6 @@ const app = createApp(App);
 app.use(VueAxios, axios);
 app.use(router);
 
-// Định nghĩa phương thức dùng chung cho toàn ứng dụng
 app.config.globalProperties.$formatDate = function (dateString) {
   const date = new Date(dateString);
   const day = date.getDate();

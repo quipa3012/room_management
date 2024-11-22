@@ -6,7 +6,6 @@
 
     <div class="row justify-content-center">
       <form @submit.prevent="handleSubmit" class="col-lg-4">
-        <!-- Các trường nhập liệu cho thông tin thành viên -->
         <div class="mb-3">
           <label for="tenantId" class="form-label">CCCD</label>
           <input
@@ -70,25 +69,24 @@ import axios from "axios";
 export default {
   data() {
     return {
-      tenant_id: "", // CCCD nhập vào
+      tenant_id: "",
       full_name: "",
       phone_number: "",
       date_of_birth: "",
-      gender: 1, // Mặc định là Nam
+      gender: 1,
     };
   },
   methods: {
     async handleSubmit() {
       try {
         const newTenant = {
-          tenant_id: this.tenant_id, // Truyền tenant_id người dùng nhập
+          tenant_id: this.tenant_id,
           full_name: this.full_name,
           phone_number: this.phone_number,
           date_of_birth: this.date_of_birth,
           gender: this.gender,
         };
 
-        // Gọi API để thêm thành viên mới
         const response = await axios.post("/tenants", newTenant);
         console.log(response.data.message);
         alert("Thêm thành viên thành công!");

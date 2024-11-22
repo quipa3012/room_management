@@ -1,6 +1,5 @@
 const db = require("../config/db");
 
-// Lấy danh sách tất cả các hợp đồng
 exports.getRentals = (req, res) => {
   const query = `
     SELECT rentals.*, 
@@ -48,7 +47,6 @@ exports.getRentalById = (req, res) => {
       return res.status(404).json({ error: "Không tìm thấy hợp đồng" });
     }
 
-    // Lấy danh sách thanh toán của hợp đồng
     const paymentQuery = `
       SELECT payments.payment_id, 
              payments.payment_date, 
@@ -64,18 +62,15 @@ exports.getRentalById = (req, res) => {
           .json({ error: "Lỗi khi lấy danh sách thanh toán" });
       }
 
-      // Thêm danh sách thanh toán vào kết quả hợp đồng
       results[0].payments = paymentResults;
       res.json(results[0]);
     });
   });
 };
 
-// Chấm dứt hợp đồng
 exports.terminateRental = (req, res) => {
   const rentalId = req.params.rental_id;
 
-  // Bước 1: Lấy thông tin phòng từ hợp đồng để cập nhật trạng thái phòng
   const getRoomQuery = "SELECT room_id FROM rentals WHERE rental_id = ?";
 
   db.query(getRoomQuery, [rentalId], (err, results) => {
@@ -88,7 +83,6 @@ exports.terminateRental = (req, res) => {
 
     const roomId = results[0].room_id;
 
-    // Bước 2: Cập nhật trạng thái hợp đồng thành "không hiệu lực"
     const updateRentalQuery =
       'UPDATE rentals SET status = "không hiệu lực" WHERE rental_id = ?';
 
@@ -99,7 +93,6 @@ exports.terminateRental = (req, res) => {
           .json({ error: "Lỗi khi cập nhật trạng thái hợp đồng" });
       }
 
-      // Bước 3: Cập nhật trạng thái phòng thành "đang trống"
       const updateRoomQuery =
         'UPDATE rooms SET status = "đang trống" WHERE room_id = ?';
 
@@ -119,12 +112,10 @@ exports.terminateRental = (req, res) => {
   });
 };
 
-// Thêm thanh toán mới vào hợp đồng
 exports.addPayment = (req, res) => {
   const { rental_id, amount } = req.body;
   const paymentDate = new Date();
 
-  // Kiểm tra nếu amount không phải là số dương
   if (amount <= 0) {
     return res.status(400).json({ error: "Số tiền thanh toán phải lớn hơn 0" });
   }
@@ -147,12 +138,10 @@ exports.addPayment = (req, res) => {
   });
 };
 
-// Tạo hợp đồng mới
 exports.createRental = (req, res) => {
   const { room_id, tenant_id, start_date, end_date, deposit, status } =
     req.body;
 
-  // Kiểm tra nếu thiếu thông tin bắt buộc
   if (
     !room_id ||
     !tenant_id ||
@@ -164,7 +153,6 @@ exports.createRental = (req, res) => {
     return res.status(400).json({ error: "Vui lòng điền đầy đủ thông tin" });
   }
 
-  // Kiểm tra xem phòng có trạng thái "đang trống" không
   const checkRoomQuery =
     'SELECT * FROM rooms WHERE room_id = ? AND status = "đang trống"';
 
@@ -174,25 +162,21 @@ exports.createRental = (req, res) => {
       return res.status(500).json({ error: "Lỗi khi kiểm tra phòng" });
     }
 
-    // Nếu không tìm thấy phòng trống
     if (results.length === 0) {
       return res
         .status(400)
         .json({ error: "Phòng này không trống hoặc không tồn tại" });
     }
 
-    // Lấy giá phòng từ bảng rooms
     const room = results[0];
-    const rental_price = room.price; // Giả sử trường giá phòng là 'price' trong bảng rooms
+    const rental_price = room.price;
 
-    // Nếu phòng đang có người thuê
     if (room.status !== "đang trống") {
       return res
         .status(400)
         .json({ error: "Phòng này không còn trống để thuê" });
     }
 
-    // Nếu phòng hợp lệ, tiếp tục tạo hợp đồng
     const createRentalQuery = `
       INSERT INTO rentals (room_id, tenant_id, start_date, end_date, deposit, rental_price, status)
       VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -207,10 +191,8 @@ exports.createRental = (req, res) => {
           return res.status(500).json({ error: "Lỗi khi tạo hợp đồng" });
         }
 
-        // Lấy ID của hợp đồng mới tạo
         const rentalId = results.insertId;
 
-        // Cập nhật trạng thái phòng thành "đang thuê"
         const updateRoomQuery = `
           UPDATE rooms
           SET status = "đang thuê"
@@ -219,13 +201,12 @@ exports.createRental = (req, res) => {
 
         db.query(updateRoomQuery, [room_id], (err, updateResults) => {
           if (err) {
-            console.error("Lỗi khi cập nhật trạng thái phòng:", err); // Log thêm lỗi để dễ kiểm tra
+            console.error("Lỗi khi cập nhật trạng thái phòng:", err);
             return res
               .status(500)
               .json({ error: "Lỗi khi cập nhật trạng thái phòng" });
           }
 
-          // Trả về ID của hợp đồng đã tạo và thông báo thành công
           res.status(201).json({
             rental_id: rentalId,
             message:

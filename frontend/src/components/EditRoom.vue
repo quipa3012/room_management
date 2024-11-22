@@ -50,13 +50,12 @@ import axios from "axios";
 export default {
   data() {
     return {
-      room: null, // Dữ liệu phòng
+      room: null,
     };
   },
   async created() {
     const roomId = this.$route.params.room_id;
     try {
-      // Lấy thông tin phòng từ API
       const response = await axios.get(`/rooms/${roomId}`);
       this.room = response.data;
     } catch (error) {
@@ -67,17 +66,14 @@ export default {
     async updateRoom() {
       const roomId = this.$route.params.room_id;
       try {
-        // Gửi yêu cầu cập nhật phòng đến backend
         const response = await axios.put(`/rooms/${roomId}`, {
           capacity: this.room.capacity,
           price: this.room.price,
         });
 
         if (response.status === 200) {
-          // Hiển thị hộp thoại alert
           alert("Cập nhật phòng thành công!");
 
-          // Quay lại danh sách phòng sau khi cập nhật thành công
           this.$router.push("/");
         }
       } catch (error) {
